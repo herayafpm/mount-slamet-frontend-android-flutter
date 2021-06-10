@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "120062514995",
+    "project_id": "mount-slamet",
+    "storage_bucket": "mount-slamet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120062514995:android:e3ec532319c07bc8419046",
+        "android_client_info": {
+          "package_name": "com.heraya.mount_slamet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120062514995-dqirq298bamjp6jsslj1o26la5ri5ak4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQqofvVXLyvI-0yMhZ8XMwN8vy2CXhcAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120062514995-dqirq298bamjp6jsslj1o26la5ri5ak4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
