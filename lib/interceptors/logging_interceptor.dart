@@ -12,9 +12,10 @@ class LoggingInterceptor extends Interceptor {
   }
 
   @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
+  Future onResponse(
+      Response response, ResponseInterceptorHandler handler) async {
     print(
-        "<-- ${response.statusCode} ${response.request?.method} ${response.request?.path}");
+        "<-- ${response.statusCode} ${response.requestOptions?.method} ${response.requestOptions?.baseUrl} ${response.requestOptions?.path}");
     String responseAsString = response.data.toString();
     if (responseAsString.length > _maxCharactersPerLine) {
       int iterations =

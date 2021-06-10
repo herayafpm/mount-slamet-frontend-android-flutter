@@ -9,7 +9,7 @@ abstract class AuthRepository {
   static Future<Map<String, dynamic>> login(
       String userEmail, String userPassword) async {
     try {
-      Response response = await DioService.init().post("/auth", data: {
+      Response response = await DioService.init().post("auth/login", data: {
         "user_email": userEmail,
         "user_password": userPassword,
       });
@@ -28,7 +28,8 @@ abstract class AuthRepository {
 
   static Future<Map<String, dynamic>> loginWithGoogle(String authKey) async {
     try {
-      Response response = await DioService.init().post("/auth", data: {
+      Response response =
+          await DioService.init().post("auth/login/with_social", data: {
         "user_auth_key": authKey,
         "auth_tipe": "google",
       });
@@ -50,7 +51,7 @@ abstract class AuthRepository {
   static Future<Map<String, dynamic>> lupaPassword(String userEmail) async {
     try {
       Response response =
-          await DioService.init().post("/auth/lupa_password", data: {
+          await DioService.init().post("auth/lupa_password", data: {
         "user_email": userEmail,
       });
       Map<String, dynamic> data = Map<String, dynamic>();
@@ -70,7 +71,7 @@ abstract class AuthRepository {
       String userEmail, int kodeOtp) async {
     try {
       Response response =
-          await DioService.init().post("/auth/lupa_password/cek_kode", data: {
+          await DioService.init().post("auth/lupa_password/cek_kode", data: {
         "user_email": userEmail,
         "kode_otp": kodeOtp,
       });
@@ -91,7 +92,7 @@ abstract class AuthRepository {
       String userEmail, int kodeOtp, String userPassword) async {
     try {
       Response response = await DioService.init()
-          .post("/auth/lupa_password/ubah_password", data: {
+          .post("auth/lupa_password/ubah_password", data: {
         "user_email": userEmail,
         "kode_otp": kodeOtp,
         "user_password": userPassword,

@@ -9,7 +9,7 @@ abstract class SettingRepository {
   static Future<Map<String, dynamic>> settingAll() async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.get("/setting");
+      Response response = await dio.get("setting");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -27,7 +27,7 @@ abstract class SettingRepository {
       Map<String, dynamic> setting) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.put("/setting", data: setting);
+      Response response = await dio.put("setting", data: setting);
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;

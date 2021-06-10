@@ -12,7 +12,7 @@ abstract class BookingRepository {
     try {
       Dio dio = await DioService.withAuth();
       Response response = await dio.get(
-          "/admin/booking?limit=$limit&offset=$offset&booking_status=$bookingStatus");
+          "admin/booking?limit=$limit&offset=$offset&booking_status=$bookingStatus");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -29,7 +29,7 @@ abstract class BookingRepository {
   static Future<Map<String, dynamic>> bookingDetail(String noOrder) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.get("/admin/booking/detail/$noOrder");
+      Response response = await dio.get("admin/booking/detail/$noOrder");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -46,7 +46,7 @@ abstract class BookingRepository {
   static Future<Map<String, dynamic>> bookingKonfirmasi(String noOrder) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.post("/admin/booking/konfirmasi/$noOrder");
+      Response response = await dio.post("admin/booking/konfirmasi/$noOrder");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -65,7 +65,7 @@ abstract class BookingRepository {
     try {
       Dio dio = await DioService.withAuth();
       dio.options.responseType = ResponseType.bytes;
-      Response response = await dio.post("/admin/booking/laporan", data: {
+      Response response = await dio.post("admin/booking/laporan", data: {
         "tgl_awal": tglAwal,
         "tgl_akhir": tglAkhir,
       });

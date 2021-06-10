@@ -9,7 +9,7 @@ abstract class UserRepository {
   static Future<Map<String, dynamic>> profile() async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.get("/user/profile");
+      Response response = await dio.get("user/profile");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -27,7 +27,7 @@ abstract class UserRepository {
       Map<String, dynamic> user) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.put("/user/profile", data: user);
+      Response response = await dio.put("user/profile", data: user);
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -44,7 +44,7 @@ abstract class UserRepository {
   static Future<Map<String, dynamic>> updateFCM(String userFcm) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.put("/user/fcm", data: {
+      Response response = await dio.put("user/fcm", data: {
         "user_fcm": userFcm,
       });
       Map<String, dynamic> data = Map<String, dynamic>();
@@ -63,7 +63,7 @@ abstract class UserRepository {
   static Future<Map<String, dynamic>> ubahPassword(String userPassword) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.put("/user/ubah_password", data: {
+      Response response = await dio.put("user/ubah_password", data: {
         "user_password": userPassword,
       });
       Map<String, dynamic> data = Map<String, dynamic>();
@@ -86,7 +86,7 @@ abstract class UserRepository {
     try {
       Dio dio = await DioService.withAuth();
       Response response =
-          await dio.get("/user/notification?limit=$limit&offset=$offset");
+          await dio.get("user/notification?limit=$limit&offset=$offset");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -103,7 +103,7 @@ abstract class UserRepository {
   static Future<Map<String, dynamic>> notifReadAll() async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.get("/user/notification/baca_semua");
+      Response response = await dio.get("user/notification/baca_semua");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -120,7 +120,7 @@ abstract class UserRepository {
   static Future<Map<String, dynamic>> notifRead(int id) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.get("/user/notification/baca/$id");
+      Response response = await dio.get("user/notification/baca/$id");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;

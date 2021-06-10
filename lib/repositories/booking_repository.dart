@@ -10,7 +10,7 @@ abstract class BookingRepository {
       {int limit = 10, int offset = 0}) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.get("/booking?limit=$limit&offset=$offset");
+      Response response = await dio.get("booking?limit=$limit&offset=$offset");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -27,7 +27,7 @@ abstract class BookingRepository {
   static Future<Map<String, dynamic>> bookingDetail(String noOrder) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.get("/booking/detail/$noOrder");
+      Response response = await dio.get("booking/detail/$noOrder");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -44,7 +44,7 @@ abstract class BookingRepository {
   static Future<Map<String, dynamic>> bookingBatalkan(String noOrder) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.post("/booking/batalkan/$noOrder");
+      Response response = await dio.post("booking/batalkan/$noOrder");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -62,7 +62,7 @@ abstract class BookingRepository {
       Map<String, dynamic> booking) async {
     try {
       Dio dio = await DioService.withAuth();
-      Response response = await dio.post("/booking", data: booking);
+      Response response = await dio.post("booking", data: booking);
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;

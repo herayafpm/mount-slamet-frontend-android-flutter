@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 /// * [bgColor] berisi warna main background
 /// * [bgColor2] berisi warna secondary background
 abstract class Constants {
-  /// [baseUrl] nilai defaultnya adalah `https://mount-slamet.heraya.my.id`
-  static String baseUrl = "https://mount-slamet.heraya.my.id";
+  /// [baseUrl] nilai defaultnya adalah `https://mount-slamet.heraya.my.id/`
+  static String baseUrl = "https://mount-slamet.heraya.my.id/";
 
   /// [oneSignalKey]
   static String oneSignalKey = "51e7eef2-a967-4a81-bc21-970c99cd5a0e";
@@ -25,7 +25,8 @@ abstract class Constants {
   static List<String> statuses = ["Proses", "Konfirmasi", "Batal"];
 
   /// [textColor] nilai defaultnya adalah `#156778`
-  static Color textColor = Color(0xFF156778);
+  // static Color textColor = Color(0xFF156778);
+  static Color textColor = Colors.black87;
 
   /// [inputColor] nilai defaultnya adalah `#535353`
   static Color inputColor = Color(0xFF535353);
