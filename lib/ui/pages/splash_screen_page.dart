@@ -16,20 +16,11 @@ class SplashScreenPage extends StatelessWidget {
               children: [
                 Align(
                   alignment: Alignment.center,
-                  child: Hero(
-                    tag: "icon",
-                    child: Image.asset(
-                      "assets/images/icon.png",
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Txt(
-                        "Wholesale",
+                        "Mount Slamet",
                         style: TxtStyle()
                           ..textColor(Constants.textColor)
                           ..fontSize(14.sp)

@@ -7,15 +7,17 @@ import '../../constants.dart';
 class MyFlatButtonComp extends StatelessWidget {
   final String title;
   final Function onTap;
+  final Color color;
 
-  const MyFlatButtonComp({this.title, this.onTap});
+  const MyFlatButtonComp({this.title, this.onTap, this.color});
   @override
   Widget build(BuildContext context) {
+    Color color = this.color ?? Constants.textColor;
     return Parent(
       gesture: Gestures()..onTap(onTap),
       child: Txt("$title",
           style: TxtStyle()
-            ..textColor(Constants.textColor)
+            ..textColor(color)
             ..fontSize(15.sp)
             ..textAlign.center()),
       style: ParentStyle()..width(0.8.sw),

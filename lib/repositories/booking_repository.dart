@@ -75,5 +75,22 @@ abstract class BookingRepository {
       return ResponseUtil.errorClient(e.toString());
     }
   }
+
+  static Future<Map<String, dynamic>> bookingHariIni() async {
+    try {
+      Dio dio = await DioService.withAuth();
+      Response response = await dio.get("booking/hari_ini");
+      Map<String, dynamic> data = Map<String, dynamic>();
+      data['statusCode'] = response.statusCode;
+      data['data'] = response.data;
+      return data;
+    } on SocketException catch (e) {
+      return ResponseUtil.errorClient(e.message);
+    } on DioError catch (e) {
+      return ResponseUtil.errorClient(e.message);
+    } catch (e) {
+      return ResponseUtil.errorClient(e.toString());
+    }
+  }
   // end booking
 }

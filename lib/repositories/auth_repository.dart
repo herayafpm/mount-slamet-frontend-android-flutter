@@ -5,7 +5,7 @@ import 'package:mount_slamet/services/dio_service.dart';
 import 'package:mount_slamet/utils/response_util.dart';
 
 abstract class AuthRepository {
-  // base_url + "/auth"
+  // base_url + "/auth/login"
   static Future<Map<String, dynamic>> login(
       String userEmail, String userPassword) async {
     try {
@@ -33,6 +33,25 @@ abstract class AuthRepository {
         "user_auth_key": authKey,
         "auth_tipe": "google",
       });
+      Map<String, dynamic> data = Map<String, dynamic>();
+      data['statusCode'] = response.statusCode;
+      data['data'] = response.data;
+      return data;
+    } on SocketException catch (e) {
+      return ResponseUtil.errorClient(e.message);
+    } on DioError catch (e) {
+      return ResponseUtil.errorClient(e.message);
+    } catch (e) {
+      return ResponseUtil.errorClient(e.toString());
+    }
+  }
+
+  // base_url + "/auth/register"
+  static Future<Map<String, dynamic>> register(
+      Map<String, dynamic> user) async {
+    try {
+      Response response =
+          await DioService.init().post("auth/register", data: user);
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;

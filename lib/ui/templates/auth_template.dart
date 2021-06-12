@@ -25,14 +25,6 @@ class AuthTemplate extends StatelessWidget {
               alignment: Alignment.center,
               child: Column(
                 children: [
-                  Hero(
-                    tag: "icon",
-                    child: Image.asset(
-                      "assets/images/icon.png",
-                      width: 0.4.sw,
-                      height: 0.2.sh,
-                    ),
-                  ),
                   (onBack != null)
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,15 +33,15 @@ class AuthTemplate extends StatelessWidget {
                               icon: Icon(Icons.arrow_back_ios),
                               onPressed: onBack,
                             ),
-                            // Container(
-                            //   child: Txt("$title",
-                            //       style: TxtStyle()
-                            //         ..textColor(Constants.textColor)
-                            //         ..bold()
-                            //         ..fontSize(15.sp)
-                            //         ..textAlign.center()
-                            //         ..textOverflow(TextOverflow.ellipsis)),
-                            // ),
+                            Container(
+                              child: Txt("$title",
+                                  style: TxtStyle()
+                                    ..textColor(Constants.textColor)
+                                    ..bold()
+                                    ..fontSize(15.sp)
+                                    ..textAlign.center()
+                                    ..textOverflow(TextOverflow.ellipsis)),
+                            ),
                             Container(),
                             Container(),
                           ],

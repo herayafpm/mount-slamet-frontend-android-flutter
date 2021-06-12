@@ -6,10 +6,10 @@ import 'package:mount_slamet/bloc/auth/login/login_bloc.dart';
 class LoginController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  GlobalKey<FormState> key = GlobalKey<FormState>();
   final showPass = false.obs;
   final isLoading = false.obs;
   final userAuthKey = "".obs;
+  GlobalKey<FormState> key = GlobalKey<FormState>();
 
   void login(LoginBloc bloc) {
     isLoading.value = !isLoading.value;

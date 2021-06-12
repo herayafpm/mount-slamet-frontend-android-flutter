@@ -37,17 +37,13 @@ dependencies:
   intl: ^0.17.0
   onesignal_flutter: ^3.0.0
   path_provider: ^2.0.2
+  syncfusion_flutter_datepicker: ^19.1.67-beta
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.0.4
-  flutter_launcher_icons: ^0.9.0
   hive_generator: ^1.1.0
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/images/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
