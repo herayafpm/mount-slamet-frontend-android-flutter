@@ -16,6 +16,20 @@ class HomeController extends GetxController {
 
   @override
   void onInit() async {
+    updateUser();
+    updateFCM();
+    super.onInit();
+  }
+
+  void updateFCM() async {
+    try {
+      OSDeviceState device = await OneSignal.shared.getDeviceState();
+      String onesignalUserId = device.userId;
+      await ProfileRepository.updateFCM(onesignalUserId);
+    } catch (e) {}
+  }
+
+  void updateUser() async {
     try {
       var boxUser = await Hive.openBox("user_model");
       UserModel user = boxUser.getAt(0);
@@ -26,12 +40,6 @@ class HomeController extends GetxController {
     } catch (e) {
       Get.offAllNamed("/auth/login");
     }
-    try {
-      OSDeviceState device = await OneSignal.shared.getDeviceState();
-      String onesignalUserId = device.userId;
-      await ProfileRepository.updateFCM(onesignalUserId);
-    } catch (e) {}
-    super.onInit();
   }
 
   Widget tileDefault(
@@ -75,23 +83,6 @@ class HomeController extends GetxController {
               ],
               title: Text("Konfirmasi"),
               content: Text("Yakin ingin mengakhiri sesi?"),
-            ));
-  }
-
-  void detailNotif(String title, String body) {
-    showDialog(
-        context: Get.context,
-        builder: (context) => AlertDialog(
-              actions: [
-                TextButton(
-                  child: Text("OK"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-              title: Text("$title"),
-              content: Text("$body"),
             ));
   }
 

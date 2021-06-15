@@ -52,6 +52,14 @@ class LoginView extends StatelessWidget {
             controller.emailController.text = "";
             controller.passwordController.text = "";
             Get.offAllNamed("/home");
+            if (!userModel.isAdmin &&
+                (userModel.userAlamat.isEmpty ||
+                    userModel.userNoTelp.isEmpty ||
+                    userModel.userNoTelpOt.isEmpty)) {
+              Get.offNamedUntil(
+                  "/home/akun/ubah_profile", ModalRoute.withName('/home'));
+              ToastUtil.success(message: "Harap Lengkapi data diri");
+            }
           } else if (state is LoginStateError) {
             ToastUtil.error(message: state.errors['message'] ?? '');
           }
@@ -73,7 +81,7 @@ class LoginView extends StatelessWidget {
               },
             ),
             SizedBox(
-              height: 0.03.sh,
+              height: 20,
             ),
             Obx(() => MyInputComp(
                   prefixIcon: Icon(Icons.lock),
@@ -101,7 +109,7 @@ class LoginView extends StatelessWidget {
                             )),
                 )),
             SizedBox(
-              height: 0.04.sh,
+              height: 20,
             ),
             Obx(() => MyButtonComp(
                 isLoading: controller.isLoading.value,
@@ -115,7 +123,7 @@ class LoginView extends StatelessWidget {
                         }
                       })),
             SizedBox(
-              height: 0.02.sh,
+              height: 20,
             ),
             MyFlatButtonComp(
                 color: Colors.blueAccent,
@@ -124,42 +132,42 @@ class LoginView extends StatelessWidget {
                   Get.toNamed("/auth/forget_password");
                 }),
             SizedBox(
-              height: 0.02.sh,
+              height: 20,
             ),
-            Parent(
-              gesture: Gestures()
-                ..onTap(() {
-                  controller.loginGoogle();
-                }),
-              style: ParentStyle()
-                ..background.color(Color(0xffffb8b8))
-                ..padding(vertical: 10, horizontal: 5)
-                ..borderRadius(all: 5)
-                ..elevation(2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FaIcon(
-                    FontAwesomeIcons.googlePlusG,
-                    color: Color(0xffff3838),
-                    size: 20.sp,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Txt(
-                    "Sign In with Google",
-                    style: TxtStyle()
-                      ..textColor(Color(0xffff3838))
-                      ..bold()
-                      ..fontSize(14.sp),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 0.02.sh,
-            ),
+            // Parent(
+            //   gesture: Gestures()
+            //     ..onTap(() {
+            //       controller.loginGoogle();
+            //     }),
+            //   style: ParentStyle()
+            //     ..background.color(Color(0xffffb8b8))
+            //     ..padding(vertical: 10, horizontal: 5)
+            //     ..borderRadius(all: 5)
+            //     ..elevation(2),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       FaIcon(
+            //         FontAwesomeIcons.googlePlusG,
+            //         color: Color(0xffff3838),
+            //         size: 20.sp,
+            //       ),
+            //       SizedBox(
+            //         width: 10,
+            //       ),
+            //       Txt(
+            //         "Sign In with Google",
+            //         style: TxtStyle()
+            //           ..textColor(Color(0xffff3838))
+            //           ..bold()
+            //           ..fontSize(14.sp),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            // SizedBox(
+            //   height: 0.02.sh,
+            // ),
             Parent(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

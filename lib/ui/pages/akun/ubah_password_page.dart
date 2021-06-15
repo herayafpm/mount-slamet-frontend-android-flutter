@@ -1,65 +1,56 @@
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:mount_slamet/bloc/auth/lupa_password/lupa_password_bloc.dart';
-import 'package:mount_slamet/controllers/auth/lupa_password_controller.dart';
+import 'package:mount_slamet/bloc/user/profile/profile_bloc.dart';
+import 'package:mount_slamet/controllers/home_controller.dart';
+import 'package:mount_slamet/controllers/user_controller.dart';
 import 'package:mount_slamet/ui/components/my_button_comp.dart';
 import 'package:mount_slamet/ui/components/my_input_comp.dart';
 import 'package:mount_slamet/ui/templates/auth_template.dart';
 import 'package:mount_slamet/utils/toast_util.dart';
 
-import '../../../../constants.dart';
-
-class LupaUbahPasswordPage extends StatelessWidget {
-  final controller = Get.put(LupaPasswordController());
+class UbahPasswordPage extends StatelessWidget {
+  final controller = Get.put(UserController());
   @override
   Widget build(BuildContext context) {
     return AuthTemplate(
+      title: "Ubah Password",
       onBack: () {
         Get.back();
       },
-      title: "Change Password",
       body: BlocProvider(
-        create: (context) => LupaPasswordBloc(),
-        child: LupaUbahPasswordView(),
+        create: (context) => ProfileBloc(),
+        child: UbahPasswordView(),
       ),
     );
   }
 }
 
-class LupaUbahPasswordView extends StatelessWidget {
-  final controller = Get.find<LupaPasswordController>();
-  LupaPasswordBloc bloc;
+class UbahPasswordView extends StatelessWidget {
+  final controller = Get.find<UserController>();
+  final homeController = Get.find<HomeController>();
+  ProfileBloc bloc;
   @override
   Widget build(BuildContext context) {
-    controller.ubahPasswordkey = GlobalKey<FormState>();
-    bloc = BlocProvider.of<LupaPasswordBloc>(context);
-    return BlocListener<LupaPasswordBloc, LupaPasswordState>(
-      listener: (context, state) {
-        if (state is LupaPasswordStateLoading) {
+    controller.key = GlobalKey<FormState>();
+    bloc = BlocProvider.of<ProfileBloc>(context);
+    return BlocListener<ProfileBloc, ProfileState>(
+      listener: (context, state) async {
+        if (state is ProfileStateLoading) {
           controller.isLoading.value = true;
         } else {
           controller.isLoading.value = false;
-          if (state is LupaPasswordStateSuccess) {
-            Get.offAllNamed("/auth/login");
-            controller.emailController.text = "";
-            controller.passwordController.text = "";
-            controller.password2Controller.text = "";
-            controller.kodeOTPController.text = "";
+          if (state is ProfileStateSuccess) {
             ToastUtil.success(message: state.data['message'] ?? '');
-          } else if (state is LupaPasswordStateError) {
-            ToastUtil.error(
-                message: state.errors['data']['user_password'] ??
-                    state.errors['data']['kode_otp'] ??
-                    state.errors['message'] ??
-                    '');
+            Get.back();
+          } else if (state is ProfileStateError) {
+            ToastUtil.error(message: state.errors['message'] ?? '');
           }
         }
       },
       child: Form(
-        key: controller.ubahPasswordkey,
+        key: controller.key,
         child: Column(
           children: [
             Obx(() => MyInputComp(
@@ -69,10 +60,10 @@ class LupaUbahPasswordView extends StatelessWidget {
                   title: "Password",
                   validator: (String value) {
                     if (value.isEmpty) {
-                      return "password tidak boleh kosong";
+                      return "password baru tidak boleh kosong";
                     }
                     if (value.length < 6) {
-                      return "password min 6 karakter";
+                      return "password baru min 6 karakter";
                     }
                     return null;
                   },
@@ -100,13 +91,13 @@ class LupaUbahPasswordView extends StatelessWidget {
                   title: "Confirm Password",
                   validator: (value) {
                     if (value.isEmpty) {
-                      return "konfirmasi password tidak boleh kosong";
+                      return "konfirmasi password baru tidak boleh kosong";
                     }
                     if (value.length < 6) {
-                      return "konfirmasi password min 6 karakter";
+                      return "konfirmasi password baru min 6 karakter";
                     }
                     if (value != controller.passwordController.text) {
-                      return "konfirmasi password harus sama dengan Password";
+                      return "konfirmasi password baru harus sama dengan Password Baru";
                     }
                     return null;
                   },
@@ -129,48 +120,16 @@ class LupaUbahPasswordView extends StatelessWidget {
             ),
             Obx(() => MyButtonComp(
                   isLoading: controller.isLoading.value,
-                  title: "Change",
+                  title: "Ubah",
                   color: Colors.blue,
                   onTap: (controller.isLoading.value)
                       ? () {}
                       : () {
-                          if (controller.ubahPasswordkey.currentState
-                              .validate()) {
+                          if (controller.key.currentState.validate()) {
                             controller.ubahPassword(bloc);
                           }
                         },
                 )),
-            SizedBox(
-              height: 20,
-            ),
-            Parent(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Parent(
-                    child: Txt("Remember?",
-                        style: TxtStyle()
-                          ..textColor(Constants.textColor)
-                          ..fontSize(15.sp)
-                          ..textAlign.center()),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Parent(
-                    gesture: Gestures()
-                      ..onTap(() {
-                        Get.offAllNamed("/auth/login");
-                      }),
-                    child: Txt("Login",
-                        style: TxtStyle()
-                          ..textColor(Colors.blueAccent)
-                          ..fontSize(15.sp)
-                          ..textAlign.center()),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),

@@ -75,7 +75,7 @@ class CekKodeView extends StatelessWidget {
               },
             ),
             SizedBox(
-              height: 0.04.sh,
+              height: 20,
             ),
             Obx(() => MyButtonComp(
                   isLoading: controller.isLoading.value,
@@ -91,7 +91,7 @@ class CekKodeView extends StatelessWidget {
                         },
                 )),
             SizedBox(
-              height: 0.02.sh,
+              height: 20,
             ),
             Obx(() => Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +123,7 @@ class CekKodeView extends StatelessWidget {
                   ],
                 )),
             SizedBox(
-              height: 0.02.sh,
+              height: 20,
             ),
             Parent(
               child: Row(

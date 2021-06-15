@@ -48,13 +48,21 @@ class BookingModel {
       bookingNama: json['booking_nama'] ?? "",
       bookingAlamat: json['booking_alamat'] ?? "",
       bookingNoTelp: json['booking_no_telp'] ?? "",
-      bookingJmlAnggota: json['booking_jml_anggota'] ?? 0,
+      bookingJmlAnggota: int.parse(json['booking_jml_anggota']) ?? 0,
       bookingTglMasuk: DateTimeUtil.toDate(json['booking_tgl_masuk']),
       bookingTglKeluar: DateTimeUtil.toDate(json['booking_tgl_keluar']),
-      bookingStatus: Status.values[json['booking_status']],
+      bookingStatus: Status.values[int.parse(json['booking_status'])],
       bookingCreated: DateTimeUtil.toDate(json['booking_created']),
     );
   }
+
+  bool bookingStatusIs(String status) {
+    if (status == 'proses') return this.bookingStatus == Status.Proses;
+    if (status == 'konfirmasi') return this.bookingStatus == Status.Konfirmasi;
+    if (status == 'dibatalkan') return this.bookingStatus == Status.Dibatalkan;
+    return false;
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['booking_nama'] = this.bookingNama;

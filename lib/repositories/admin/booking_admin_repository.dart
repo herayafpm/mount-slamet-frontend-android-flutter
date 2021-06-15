@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:mount_slamet/services/dio_service.dart';
 import 'package:mount_slamet/utils/response_util.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
-abstract class BookingRepository {
+abstract class BookingAdminRepository {
   // booking
   static Future<Map<String, dynamic>> bookingAll(
       {int limit = 10, int offset = 0, int bookingStatus}) async {
@@ -69,15 +70,17 @@ abstract class BookingRepository {
         "tgl_awal": tglAwal,
         "tgl_akhir": tglAkhir,
       });
-      var tempDir = await getTemporaryDirectory();
+      var tempDir = await getApplicationDocumentsDirectory();
       String savePath =
           tempDir.path + "/" + response.headers.value("Filename") ??
               "laporan.pdf";
       File file = File(savePath);
       var raf = file.openSync(mode: FileMode.write);
       // response.data is List<int> type
+      print("save path" + savePath);
       raf.writeFromSync(response.data);
       await raf.close();
+      OpenFile.open(savePath);
       return ResponseUtil.success("Berhasil mendownload laporan");
     } on SocketException catch (e) {
       return ResponseUtil.errorClient(e.message);

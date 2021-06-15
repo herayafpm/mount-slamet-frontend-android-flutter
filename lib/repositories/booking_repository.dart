@@ -92,5 +92,23 @@ abstract class BookingRepository {
       return ResponseUtil.errorClient(e.toString());
     }
   }
+
+  static Future<Map<String, dynamic>> bookingCekKetersediaan(
+      Map<String, dynamic> cek) async {
+    try {
+      Dio dio = await DioService.withAuth();
+      Response response = await dio.post("booking/cek_ketersediaan", data: cek);
+      Map<String, dynamic> data = Map<String, dynamic>();
+      data['statusCode'] = response.statusCode;
+      data['data'] = response.data;
+      return data;
+    } on SocketException catch (e) {
+      return ResponseUtil.errorClient(e.message);
+    } on DioError catch (e) {
+      return ResponseUtil.errorClient(e.message);
+    } catch (e) {
+      return ResponseUtil.errorClient(e.toString());
+    }
+  }
   // end booking
 }

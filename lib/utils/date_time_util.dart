@@ -19,7 +19,7 @@ abstract class DateTimeUtil {
 
   static String toDateHumanize(String datetime) {
     DateTime dateTime = DateTime.parse(datetime);
-    return DateFormat("dd-MM-yyyy H.mm").format(dateTime);
+    return DateFormat("dd MMMM yyyy").format(dateTime);
   }
 
   static String toDateTime(String datetime) {

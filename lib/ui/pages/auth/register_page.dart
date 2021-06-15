@@ -2,13 +2,10 @@ import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:mount_slamet/bloc/auth/login/login_bloc.dart';
 import 'package:mount_slamet/bloc/auth/register/register_bloc.dart';
 import 'package:mount_slamet/controllers/auth/register_controller.dart';
 import 'package:mount_slamet/ui/components/my_button_comp.dart';
-import 'package:mount_slamet/ui/components/my_flat_button_comp.dart';
 import 'package:mount_slamet/ui/components/my_input_comp.dart';
 import 'package:mount_slamet/ui/templates/auth_template.dart';
 import 'package:mount_slamet/utils/toast_util.dart';
@@ -72,7 +69,7 @@ class RegisterView extends StatelessWidget {
               },
             ),
             SizedBox(
-              height: 0.03.sh,
+              height: 20,
             ),
             MyInputComp(
               controller: controller.emailController,
@@ -89,7 +86,7 @@ class RegisterView extends StatelessWidget {
               },
             ),
             SizedBox(
-              height: 0.03.sh,
+              height: 20,
             ),
             Obx(() => MyInputComp(
                   prefixIcon: Icon(Icons.lock),
@@ -120,7 +117,7 @@ class RegisterView extends StatelessWidget {
                             )),
                 )),
             SizedBox(
-              height: 0.04.sh,
+              height: 20,
             ),
             Obx(() => MyInputComp(
                   prefixIcon: Icon(Icons.lock),
@@ -154,7 +151,7 @@ class RegisterView extends StatelessWidget {
                             )),
                 )),
             SizedBox(
-              height: 0.04.sh,
+              height: 20,
             ),
             Obx(() => MyButtonComp(
                 isLoading: controller.isLoading.value,
