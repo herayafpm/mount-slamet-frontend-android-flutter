@@ -20,7 +20,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           await ProfileRepository.ubahProfile(event.user);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield ProfileStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield ProfileStateSuccess(res['data']);
       } else {
         yield ProfileStateError(res['data']);
@@ -31,7 +31,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           await ProfileRepository.ubahPassword(event.password);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield ProfileStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield ProfileStateSuccess(res['data']);
       } else {
         yield ProfileStateError(res['data']);

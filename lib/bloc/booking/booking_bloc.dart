@@ -21,7 +21,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       Map<String, dynamic> res = await BookingRepository.bookingHariIni();
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield BookingStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield BookingHariIniStateSuccess(res['data']);
       } else {
         yield BookingStateError(res['data']);
@@ -36,7 +36,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           await BookingRepository.bookingCekKetersediaan(cek);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield BookingStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield BookingCekKetersediaanStateSuccess(res['data']);
       } else {
         yield BookingStateError(res['data']);
@@ -46,7 +46,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       Map<String, dynamic> res = await BookingRepository.booking(event.data);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield BookingStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield BookingStateSuccess(res['data']);
       } else {
         yield BookingStateError(res['data']);
@@ -56,7 +56,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       if (state is BookingInitial || event.refresh) {
         Map<String, dynamic> res =
             await BookingRepository.bookingAll(limit: 10, offset: 0);
-        if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+        if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
           booking = jsonObject
               .map<BookingModel>((e) => BookingModel.createFromJson(e))
@@ -71,7 +71,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         BookingListLoaded bookingListLoaded = state as BookingListLoaded;
         Map<String, dynamic> res = await BookingRepository.bookingAll(
             limit: 10, offset: bookingListLoaded.booking.length);
-        if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+        if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
           if (jsonObject.length == 0) {
             yield bookingListLoaded.copyWith(hasReachMax: true);
@@ -94,7 +94,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       if (state is BookingInitial || event.refresh) {
         Map<String, dynamic> res = await BookingAdminRepository.bookingAll(
             limit: 10, offset: 0, bookingStatus: event.status);
-        if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+        if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
           booking = jsonObject
               .map<BookingModel>((e) => BookingModel.createFromJson(e))
@@ -111,7 +111,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
             limit: 10,
             offset: bookingListLoaded.booking.length,
             bookingStatus: event.status);
-        if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+        if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
           if (jsonObject.length == 0) {
             yield bookingListLoaded.copyWith(hasReachMax: true);
@@ -135,7 +135,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           await BookingRepository.bookingBatalkan(event.noOrder);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield BookingStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield BookingStateSuccess(res['data']);
       } else {
         yield BookingStateError(res['data']);
@@ -146,7 +146,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           await BookingAdminRepository.bookingKonfirmasi(event.noOrder);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield BookingStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield BookingStateSuccess(res['data']);
       } else {
         yield BookingStateError(res['data']);
@@ -157,7 +157,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           event.tglMasuk, event.tglKeluar);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield BookingStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield BookingLaporanStateSuccess(res['data']);
       } else {
         yield BookingStateError(res['data']);

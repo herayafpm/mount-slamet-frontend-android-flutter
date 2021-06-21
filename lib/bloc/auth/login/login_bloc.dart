@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await AuthRepository.login(event.userEmail, event.userPassword);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield LoginStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield LoginStateSuccess(res['data']);
       } else {
         yield LoginStateError(res['data']);
@@ -31,7 +31,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await AuthRepository.loginWithGoogle(event.userAuthKey);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield LoginStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield LoginStateSuccess(res['data']);
       } else {
         yield LoginStateError(res['data']);

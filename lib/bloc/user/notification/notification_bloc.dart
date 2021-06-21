@@ -20,7 +20,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       if (state is NotificationInitial || event.refresh) {
         Map<String, dynamic> res =
             await NotificationRepository.notifAll(limit: 10, offset: 0);
-        if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+        if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
           notification = jsonObject
               .map<NotificationModel>(
@@ -38,7 +38,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
             state as NotificationListLoaded;
         Map<String, dynamic> res = await NotificationRepository.notifAll(
             limit: 10, offset: notificationListLoaded.notification.length);
-        if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+        if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
           if (jsonObject.length == 0) {
             yield notificationListLoaded.copyWith(hasReachMax: true);
@@ -60,7 +60,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       }
     } else if (event is NotificationBacaSemuaEvent) {
       Map<String, dynamic> res = await NotificationRepository.notifReadAll();
-      if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+      if (res['statusCode'] == 200 && res['data']['status'] == true) {
         this..add(NotificationGetListEvent(refresh: true));
       } else if (res['statusCode'] == 400) {
         yield NotificationStateError(res['data']);
@@ -70,7 +70,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     } else if (event is NotificationBacaEvent) {
       Map<String, dynamic> res =
           await NotificationRepository.notifRead(event.id);
-      if (res['statusCode'] == 200 && res['data']['status'] == 1) {
+      if (res['statusCode'] == 200 && res['data']['status'] == true) {
         this..add(NotificationGetListEvent(refresh: true));
       } else if (res['statusCode'] == 400) {
         yield NotificationStateError(res['data']);

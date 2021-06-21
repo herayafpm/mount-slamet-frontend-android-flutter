@@ -20,7 +20,7 @@ class LupaPasswordBloc extends Bloc<LupaPasswordEvent, LupaPasswordState> {
           await AuthRepository.lupaPassword(event.userEmail);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield LupaPasswordStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield LupaPasswordStateSuccess(res['data']);
       } else {
         yield LupaPasswordStateError(res['data']);
@@ -31,7 +31,7 @@ class LupaPasswordBloc extends Bloc<LupaPasswordEvent, LupaPasswordState> {
           event.userEmail, event.kodeOtp);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield LupaPasswordStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield LupaPasswordCekTokenSuccess(res['data']);
       } else {
         yield LupaPasswordStateError(res['data']);
@@ -42,7 +42,7 @@ class LupaPasswordBloc extends Bloc<LupaPasswordEvent, LupaPasswordState> {
           event.userEmail, event.kodeOtp, event.userPassword);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield LupaPasswordStateError(res['data']);
-      } else if (res['statusCode'] == 200) {
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
         yield LupaPasswordStateSuccess(res['data']);
       } else {
         yield LupaPasswordStateError(res['data']);
