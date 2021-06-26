@@ -19,6 +19,19 @@ class SplashScreenPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Hero(
+                          tag: "icon",
+                          child: Image.asset(
+                            "assets/images/logo.png",
+                            width: 1.sh / 5,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 1.sh / 50,
+                      ),
                       Txt(
                         "Mount Slamet",
                         style: TxtStyle()
@@ -27,7 +40,7 @@ class SplashScreenPage extends StatelessWidget {
                           ..fontWeight(FontWeight.bold),
                       ),
                       SizedBox(
-                        height: 0.02.sh,
+                        height: 1.sh / 50,
                       ),
                       Txt(
                         "Versi 1.0",
