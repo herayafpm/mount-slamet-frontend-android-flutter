@@ -107,11 +107,10 @@ class DetailBookingView extends StatelessWidget {
                       title: Text("No Telp"),
                       subtitle: Text(booking.bookingNoTelp),
                     ),
-                    Obx(() => homeController.userModel.value.isAdmin ||
-                            DateTimeUtil.toDate(DateTime.now().toString())
-                                    .isBefore(DateTimeUtil.toDate(
-                                        booking.bookingTglKeluar.toString())) &&
-                                (!booking.bookingStatusIs("dibatalkan"))
+                    DateTimeUtil.toDate(DateTime.now().toString()).isBefore(
+                                DateTimeUtil.toDate(
+                                    booking.bookingTglKeluar.toString())) &&
+                            (!booking.bookingStatusIs("dibatalkan"))
                         ? Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Obx(() => MyButtonComp(
@@ -125,10 +124,9 @@ class DetailBookingView extends StatelessWidget {
                                         controller.batalkanBooking(bloc);
                                       })),
                           )
-                        : Container()),
+                        : Container(),
                     Obx(() => homeController.userModel.value.isAdmin &&
-                            (booking.bookingStatusIs("proses") ||
-                                (booking.bookingStatusIs("dibatalkan")))
+                            (booking.bookingStatusIs("proses"))
                         ? Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Obx(() => MyButtonComp(
@@ -139,6 +137,21 @@ class DetailBookingView extends StatelessWidget {
                                     ? () {}
                                     : () {
                                         controller.konfirmasiBooking(bloc);
+                                      })),
+                          )
+                        : Container()),
+                    Obx(() => homeController.userModel.value.isAdmin &&
+                            (booking.bookingStatusIs("konfirmasi"))
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Obx(() => MyButtonComp(
+                                isLoading: controller.isLoading.value,
+                                title: "Selesai",
+                                color: Colors.blue,
+                                onTap: (controller.isLoading.value)
+                                    ? () {}
+                                    : () {
+                                        controller.selesaikanBooking(bloc);
                                       })),
                           )
                         : Container()),

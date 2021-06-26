@@ -70,6 +70,7 @@ class LoginView extends StatelessWidget {
         child: Column(
           children: [
             MyInputComp(
+              type: TextInputType.emailAddress,
               controller: controller.emailController,
               prefixIcon: Icon(Icons.email),
               title: "Email",

@@ -9,11 +9,16 @@ import 'package:path_provider/path_provider.dart';
 abstract class BookingAdminRepository {
   // booking
   static Future<Map<String, dynamic>> bookingAll(
-      {int limit = 10, int offset = 0, int bookingStatus}) async {
+      {int limit = 10,
+      int offset = 0,
+      int bookingStatus,
+      String bookingTglMasuk,
+      String bookingTglKeluar,
+      String cari}) async {
     try {
       Dio dio = await DioService.withAuth();
       Response response = await dio.get(
-          "admin/booking?limit=$limit&offset=$offset&booking_status=$bookingStatus");
+          "admin/booking?limit=$limit&offset=$offset&booking_status=$bookingStatus&booking_tgl_masuk=$bookingTglMasuk&booking_tgl_keluar=$bookingTglKeluar&cari=$cari");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
@@ -48,6 +53,23 @@ abstract class BookingAdminRepository {
     try {
       Dio dio = await DioService.withAuth();
       Response response = await dio.post("admin/booking/konfirmasi/$noOrder");
+      Map<String, dynamic> data = Map<String, dynamic>();
+      data['statusCode'] = response.statusCode;
+      data['data'] = response.data;
+      return data;
+    } on SocketException catch (e) {
+      return ResponseUtil.errorClient(e.message);
+    } on DioError catch (e) {
+      return ResponseUtil.errorClient(e.message);
+    } catch (e) {
+      return ResponseUtil.errorClient(e.toString());
+    }
+  }
+
+  static Future<Map<String, dynamic>> bookingSelesaikan(String noOrder) async {
+    try {
+      Dio dio = await DioService.withAuth();
+      Response response = await dio.post("admin/booking/selesai/$noOrder");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;

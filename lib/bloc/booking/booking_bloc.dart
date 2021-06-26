@@ -93,7 +93,12 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       List<BookingModel> booking = [];
       if (state is BookingInitial || event.refresh) {
         Map<String, dynamic> res = await BookingAdminRepository.bookingAll(
-            limit: 10, offset: 0, bookingStatus: event.status);
+            limit: 10,
+            offset: 0,
+            bookingStatus: event.status,
+            bookingTglMasuk: event.bookingTglMasuk,
+            bookingTglKeluar: event.bookingTglKeluar,
+            cari: event.cari);
         if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
           booking = jsonObject
@@ -110,7 +115,10 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         Map<String, dynamic> res = await BookingAdminRepository.bookingAll(
             limit: 10,
             offset: bookingListLoaded.booking.length,
-            bookingStatus: event.status);
+            bookingStatus: event.status,
+            bookingTglMasuk: event.bookingTglMasuk,
+            bookingTglKeluar: event.bookingTglKeluar,
+            cari: event.cari);
         if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
           if (jsonObject.length == 0) {
@@ -144,6 +152,17 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       yield BookingStateLoading();
       Map<String, dynamic> res =
           await BookingAdminRepository.bookingKonfirmasi(event.noOrder);
+      if (res['statusCode'] == 400 || res['data']['status'] == false) {
+        yield BookingStateError(res['data']);
+      } else if (res['statusCode'] == 200 && res['data']['status'] == true) {
+        yield BookingStateSuccess(res['data']);
+      } else {
+        yield BookingStateError(res['data']);
+      }
+    } else if (event is BookingSelesaikanEvent) {
+      yield BookingStateLoading();
+      Map<String, dynamic> res =
+          await BookingAdminRepository.bookingSelesaikan(event.noOrder);
       if (res['statusCode'] == 400 || res['data']['status'] == false) {
         yield BookingStateError(res['data']);
       } else if (res['statusCode'] == 200 && res['data']['status'] == true) {

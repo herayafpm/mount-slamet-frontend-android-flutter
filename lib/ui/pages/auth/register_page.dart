@@ -72,6 +72,7 @@ class RegisterView extends StatelessWidget {
               height: 20,
             ),
             MyInputComp(
+              type: TextInputType.emailAddress,
               controller: controller.emailController,
               prefixIcon: Icon(Icons.email),
               title: "Email",

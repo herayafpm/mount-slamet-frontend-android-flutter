@@ -38,6 +38,12 @@ class BookingKonfirmasiEvent extends BookingEvent {
   BookingKonfirmasiEvent(this.noOrder);
 }
 
+class BookingSelesaikanEvent extends BookingEvent {
+  final String noOrder;
+
+  BookingSelesaikanEvent(this.noOrder);
+}
+
 class BookingGetListEvent extends BookingEvent {
   final bool refresh;
 
@@ -48,7 +54,15 @@ class BookingAdminGetListEvent extends BookingEvent {
   final bool refresh;
   final bool isAdmin;
   final int status;
+  final String bookingTglMasuk;
+  final String bookingTglKeluar;
+  final String cari;
 
   BookingAdminGetListEvent(
-      {this.refresh = false, this.isAdmin = false, this.status = 0});
+      {this.refresh = false,
+      this.isAdmin = false,
+      this.status = 0,
+      this.bookingTglMasuk,
+      this.bookingTglKeluar,
+      this.cari});
 }

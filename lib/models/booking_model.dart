@@ -1,10 +1,6 @@
 import 'package:mount_slamet/utils/date_time_util.dart';
 
-enum Status {
-  Proses,
-  Konfirmasi,
-  Dibatalkan,
-}
+enum Status { Proses, Konfirmasi, Dibatalkan, Selesai }
 
 class BookingModel {
   String bookingNoOrder;

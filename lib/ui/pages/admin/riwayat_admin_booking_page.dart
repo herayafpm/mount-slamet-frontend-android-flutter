@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +20,7 @@ class RiwayatAdminBookingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: Status.values.length,
       child: ScreenUtilInit(
           designSize: Size(Constants.screenWidth, Constants.screenHeight),
           builder: () => Scaffold(
@@ -36,6 +38,25 @@ class RiwayatAdminBookingPage extends StatelessWidget {
                             ))
                         .toList(),
                   ),
+                  actions: [
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: controller.search,
+                    ),
+                    PopupMenuButton<String>(
+                      icon: Icon(Icons.calendar_today),
+                      onSelected: controller.updateDataDate,
+                      itemBuilder: (BuildContext context) {
+                        return {'Hari Ini', 'Bulan Ini', 'Tahun Ini', 'Custom'}
+                            .map((String choice) {
+                          return PopupMenuItem<String>(
+                            value: choice,
+                            child: Text(choice),
+                          );
+                        }).toList();
+                      },
+                    ),
+                  ],
                 ),
                 body: TabBarView(
                   children: Status.values
@@ -58,7 +79,12 @@ class RiwayatBookingView extends StatelessWidget {
     return BlocProvider(
       create: (context) => BookingBloc()
         ..add(BookingAdminGetListEvent(
-            refresh: true, isAdmin: true, status: tabIndex)),
+            refresh: true,
+            isAdmin: true,
+            status: tabIndex,
+            bookingTglMasuk: DateTimeUtil.onlyDate(controller.tglMasuk.value),
+            bookingTglKeluar: DateTimeUtil.onlyDate(controller.tglKeluar.value),
+            cari: controller.cari.value)),
       child: RiwayatAdminBookingTab(tabIndex: tabIndex),
     );
   }
@@ -69,72 +95,117 @@ class RiwayatAdminBookingTab extends StatelessWidget {
   final int tabIndex;
   RiwayatAdminBookingTab({this.tabIndex});
   BookingBloc bloc;
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
   void _onRefresh() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     bloc
       ..add(BookingAdminGetListEvent(
-          refresh: true, isAdmin: true, status: tabIndex));
-    _refreshController.refreshCompleted();
+          refresh: true,
+          isAdmin: true,
+          status: tabIndex,
+          bookingTglMasuk: DateTimeUtil.onlyDate(controller.tglMasuk.value),
+          bookingTglKeluar: DateTimeUtil.onlyDate(controller.tglKeluar.value),
+          cari: controller.cari.value));
+    controller.refreshController.value.refreshCompleted();
   }
 
   void _onLoading() async {
     await Future.delayed(Duration(milliseconds: 1000));
-    bloc..add(BookingAdminGetListEvent(isAdmin: true, status: tabIndex));
-    _refreshController.loadComplete();
+    bloc
+      ..add(BookingAdminGetListEvent(
+          isAdmin: true,
+          status: tabIndex,
+          bookingTglMasuk: DateTimeUtil.onlyDate(controller.tglMasuk.value),
+          bookingTglKeluar: DateTimeUtil.onlyDate(controller.tglKeluar.value),
+          cari: controller.cari.value));
+    controller.refreshController.value.loadComplete();
   }
 
   @override
   Widget build(BuildContext context) {
+    controller.refreshController.value =
+        RefreshController(initialRefresh: false);
     bloc = BlocProvider.of<BookingBloc>(context);
-    return BlocConsumer<BookingBloc, BookingState>(listener: (context, state) {
-      if (state is BookingStateError) {
-        ToastUtil.error(message: state.errors['message'] ?? "");
-      }
-    }, builder: (context, state) {
-      if (state is BookingListLoaded) {
-        BookingListLoaded stateData = state;
-        if (stateData.booking != null && stateData.booking.length > 0) {
-          return SmartRefresher(
-            controller: _refreshController,
-            enablePullDown: true,
-            enablePullUp: true,
-            header: WaterDropMaterialHeader(
-              backgroundColor: Theme.of(context).primaryColor,
-            ),
-            onRefresh: _onRefresh,
-            onLoading: _onLoading,
-            child: ListView.builder(
-              padding: EdgeInsets.only(bottom: 0, top: 0),
-              itemCount: stateData.booking.length,
-              itemBuilder: (BuildContext context, int index) {
-                BookingModel booking = stateData.booking[index];
-                return ListTile(
-                  title: Text(
-                    "${booking.bookingNoOrder}",
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(
-                    "${DateTimeUtil.toDateHumanize(booking.bookingTglMasuk.toString())} - ${DateTimeUtil.toDateHumanize(booking.bookingTglKeluar.toString())}",
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  onTap: () {
-                    Get.toNamed("/home/booking/riwayat/detail",
-                        arguments: booking);
-                  },
-                );
-              },
-            ),
-          );
-        }
-        return emptyState();
-      } else if (state is BookingStateLoading || state is BookingInitial) {
-        return loadingState();
-      }
-      return emptyState();
-    });
+    controller.bookingBloc.value = bloc;
+    return Parent(
+      style: ParentStyle()
+        ..width(1.sw)
+        ..height(1.sh),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+            child: Obx(() => Txt(controller.title.value
+                        .toLowerCase()
+                        .replaceAll(" ", "_") !=
+                    "custom"
+                ? controller.title.value
+                : "Tanggal : " +
+                    (DateTimeUtil.onlyDate(controller.tglMasuk.value) +
+                        (controller.tglMasuk.value
+                                    .compareTo(controller.tglKeluar.value) ==
+                                0
+                            ? ""
+                            : " Sampai " +
+                                (DateTimeUtil.onlyDate(
+                                    controller.tglKeluar.value)))))),
+          ),
+          Divider(),
+          Flexible(
+            flex: 1,
+            child: BlocConsumer<BookingBloc, BookingState>(
+                listener: (context, state) {
+              if (state is BookingStateError) {
+                ToastUtil.error(message: state.errors['message'] ?? "");
+              }
+            }, builder: (context, state) {
+              if (state is BookingListLoaded) {
+                BookingListLoaded stateData = state;
+                if (stateData.booking != null && stateData.booking.length > 0) {
+                  return SmartRefresher(
+                    controller: controller.refreshController.value,
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    header: WaterDropMaterialHeader(
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
+                    onRefresh: _onRefresh,
+                    onLoading: _onLoading,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: 0, top: 0),
+                      itemCount: stateData.booking.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        BookingModel booking = stateData.booking[index];
+                        return ListTile(
+                          title: Text(
+                            "${booking.bookingNoOrder}",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            "${DateTimeUtil.toDateHumanize(booking.bookingTglMasuk.toString())} - ${DateTimeUtil.toDateHumanize(booking.bookingTglKeluar.toString())}",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          onTap: () {
+                            Get.toNamed("/home/booking/riwayat/detail",
+                                arguments: booking);
+                          },
+                        );
+                      },
+                    ),
+                  );
+                }
+                return emptyState();
+              } else if (state is BookingStateLoading ||
+                  state is BookingInitial) {
+                return loadingState();
+              }
+              return emptyState();
+            }),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget loadingState() {

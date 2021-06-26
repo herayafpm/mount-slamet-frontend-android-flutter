@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:mount_slamet/services/dio_service.dart';
 import 'package:mount_slamet/utils/response_util.dart';
@@ -83,6 +82,7 @@ abstract class BookingRepository {
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;
+
       return data;
     } on SocketException catch (e) {
       return ResponseUtil.errorClient(e.message);

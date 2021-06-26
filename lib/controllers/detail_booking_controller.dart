@@ -54,4 +54,29 @@ class DetailBookingController extends GetxController {
               content: Text("Yakin ingin mengkonfirmasi data ini?"),
             ));
   }
+
+  void selesaikanBooking(BookingBloc bloc) {
+    showDialog(
+        context: Get.context,
+        builder: (context) => AlertDialog(
+              actions: [
+                TextButton(
+                  child: Text("Tidak"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: Text("Ya"),
+                  onPressed: () {
+                    isLoading.value = !isLoading.value;
+                    Navigator.pop(context);
+                    bloc..add(BookingKonfirmasiEvent(noOrder.value));
+                  },
+                )
+              ],
+              title: Text("Konfirmasi"),
+              content: Text("Yakin ingin menyelesaikan data booking ini?"),
+            ));
+  }
 }
