@@ -56,6 +56,7 @@ class BookingModel {
     if (status == 'proses') return this.bookingStatus == Status.Proses;
     if (status == 'konfirmasi') return this.bookingStatus == Status.Konfirmasi;
     if (status == 'dibatalkan') return this.bookingStatus == Status.Dibatalkan;
+    if (status == 'selesai') return this.bookingStatus == Status.Selesai;
     return false;
   }
 

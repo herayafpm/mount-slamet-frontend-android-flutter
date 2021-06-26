@@ -71,11 +71,11 @@ class DetailBookingController extends GetxController {
                   onPressed: () {
                     isLoading.value = !isLoading.value;
                     Navigator.pop(context);
-                    bloc..add(BookingKonfirmasiEvent(noOrder.value));
+                    bloc..add(BookingSelesaikanEvent(noOrder.value));
                   },
                 )
               ],
-              title: Text("Konfirmasi"),
+              title: Text("Konfirmasi Selesai"),
               content: Text("Yakin ingin menyelesaikan data booking ini?"),
             ));
   }

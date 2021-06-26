@@ -215,7 +215,20 @@ class RiwayatAdminBookingTab extends StatelessWidget {
         ..width(1.sw),
       gesture: Gestures()
         ..onTap(() {
-          bloc..add(BookingAdminGetListEvent(refresh: true));
+          controller.cari.value = "";
+          controller.tglMasuk.value = DateTime.now();
+          controller.tglKeluar.value = DateTime.now();
+          controller.title.value = "Hari Ini";
+          bloc
+            ..add(BookingAdminGetListEvent(
+                refresh: true,
+                isAdmin: true,
+                status: tabIndex,
+                bookingTglMasuk:
+                    DateTimeUtil.onlyDate(controller.tglMasuk.value),
+                bookingTglKeluar:
+                    DateTimeUtil.onlyDate(controller.tglKeluar.value),
+                cari: controller.cari.value));
         }),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -238,7 +251,20 @@ class RiwayatAdminBookingTab extends StatelessWidget {
         ..width(1.sw),
       gesture: Gestures()
         ..onTap(() {
-          bloc..add(BookingAdminGetListEvent(refresh: true));
+          controller.cari.value = "";
+          controller.tglMasuk.value = DateTime.now();
+          controller.tglKeluar.value = DateTime.now();
+          controller.title.value = "Hari Ini";
+          bloc
+            ..add(BookingAdminGetListEvent(
+                refresh: true,
+                isAdmin: true,
+                status: tabIndex,
+                bookingTglMasuk:
+                    DateTimeUtil.onlyDate(controller.tglMasuk.value),
+                bookingTglKeluar:
+                    DateTimeUtil.onlyDate(controller.tglKeluar.value),
+                cari: controller.cari.value));
         }),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

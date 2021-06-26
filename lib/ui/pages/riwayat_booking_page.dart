@@ -95,6 +95,11 @@ class RiwayatBookingView extends StatelessWidget {
                               Icons.highlight_remove_outlined,
                               color: Colors.redAccent,
                             );
+                          } else if (booking.bookingStatusIs("selesai")) {
+                            leading = Icon(
+                              Icons.done_all,
+                              color: Colors.greenAccent,
+                            );
                           }
                           return ListTile(
                             leading: leading,

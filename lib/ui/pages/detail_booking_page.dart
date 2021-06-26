@@ -107,10 +107,11 @@ class DetailBookingView extends StatelessWidget {
                       title: Text("No Telp"),
                       subtitle: Text(booking.bookingNoTelp),
                     ),
-                    DateTimeUtil.toDate(DateTime.now().toString()).isBefore(
-                                DateTimeUtil.toDate(
-                                    booking.bookingTglKeluar.toString())) &&
-                            (!booking.bookingStatusIs("dibatalkan"))
+                    Obx(() => (homeController.userModel.value.isAdmin ||
+                                DateTimeUtil.toDate(DateTime.now().toString())
+                                    .isBefore(DateTimeUtil.toDate(
+                                        booking.bookingTglMasuk.toString()))) &&
+                            booking.bookingStatusIs("proses")
                         ? Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Obx(() => MyButtonComp(
@@ -124,7 +125,7 @@ class DetailBookingView extends StatelessWidget {
                                         controller.batalkanBooking(bloc);
                                       })),
                           )
-                        : Container(),
+                        : Container()),
                     Obx(() => homeController.userModel.value.isAdmin &&
                             (booking.bookingStatusIs("proses"))
                         ? Padding(
