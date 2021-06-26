@@ -123,6 +123,7 @@ class RiwayatAdminBookingTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.tab.value = tabIndex;
     controller.refreshController.value =
         RefreshController(initialRefresh: false);
     bloc = BlocProvider.of<BookingBloc>(context);
