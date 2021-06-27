@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:division/division.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +17,6 @@ import '../../../constants.dart';
 
 class RiwayatAdminBookingPage extends StatelessWidget {
   final controller = Get.put(AdminBookingController());
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -31,10 +31,15 @@ class RiwayatAdminBookingPage extends StatelessWidget {
                   ),
                   iconTheme: IconThemeData(color: Colors.black87),
                   bottom: TabBar(
+                    isScrollable: true,
                     tabs: Status.values
-                        .map((e) => Tab(
-                              child: Txt(e.toString().split(".")[1],
-                                  style: TxtStyle()..textColor(Colors.black87)),
+                        .map((e) => Container(
+                              width: 0.8.sw / Status.values.length,
+                              child: Tab(
+                                child: Txt(e.toString().split(".")[1],
+                                    style: TxtStyle()
+                                      ..textColor(Colors.black87)),
+                              ),
                             ))
                         .toList(),
                   ),
@@ -47,8 +52,13 @@ class RiwayatAdminBookingPage extends StatelessWidget {
                       icon: Icon(Icons.calendar_today),
                       onSelected: controller.updateDataDate,
                       itemBuilder: (BuildContext context) {
-                        return {'Hari Ini', 'Bulan Ini', 'Tahun Ini', 'Custom'}
-                            .map((String choice) {
+                        return {
+                          'Hari Ini',
+                          'Bulan Ini',
+                          'Tahun Ini',
+                          "Semua",
+                          'Custom'
+                        }.map((String choice) {
                           return PopupMenuItem<String>(
                             value: choice,
                             child: Text(choice),
@@ -79,6 +89,7 @@ class RiwayatBookingView extends StatelessWidget {
     return BlocProvider(
       create: (context) => BookingBloc()
         ..add(BookingAdminGetListEvent(
+            semua: controller.semua.value,
             refresh: true,
             isAdmin: true,
             status: tabIndex,
@@ -100,6 +111,7 @@ class RiwayatAdminBookingTab extends StatelessWidget {
     await Future.delayed(Duration(milliseconds: 1000));
     bloc
       ..add(BookingAdminGetListEvent(
+          semua: controller.semua.value,
           refresh: true,
           isAdmin: true,
           status: tabIndex,
@@ -113,6 +125,7 @@ class RiwayatAdminBookingTab extends StatelessWidget {
     await Future.delayed(Duration(milliseconds: 1000));
     bloc
       ..add(BookingAdminGetListEvent(
+          semua: controller.semua.value,
           isAdmin: true,
           status: tabIndex,
           bookingTglMasuk: DateTimeUtil.onlyDate(controller.tglMasuk.value),
@@ -161,47 +174,66 @@ class RiwayatAdminBookingTab extends StatelessWidget {
                 ToastUtil.error(message: state.errors['message'] ?? "");
               }
             }, builder: (context, state) {
-              if (state is BookingListLoaded) {
-                BookingListLoaded stateData = state;
-                if (stateData.booking != null && stateData.booking.length > 0) {
-                  return SmartRefresher(
-                    controller: controller.refreshController.value,
-                    enablePullDown: true,
-                    enablePullUp: true,
-                    header: WaterDropMaterialHeader(
-                      backgroundColor: Theme.of(context).primaryColor,
-                    ),
-                    onRefresh: _onRefresh,
-                    onLoading: _onLoading,
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(bottom: 0, top: 0),
-                      itemCount: stateData.booking.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        BookingModel booking = stateData.booking[index];
-                        return ListTile(
-                          title: Text(
-                            "${booking.bookingNoOrder}",
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: Text(
-                            "${DateTimeUtil.toDateHumanize(booking.bookingTglMasuk.toString())} - ${DateTimeUtil.toDateHumanize(booking.bookingTglKeluar.toString())}",
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          onTap: () {
-                            Get.toNamed("/home/booking/riwayat/detail",
-                                arguments: booking);
-                          },
-                        );
-                      },
-                    ),
-                  );
-                }
-                return emptyState();
-              } else if (state is BookingStateLoading ||
-                  state is BookingInitial) {
+              if (state is BookingStateLoading || state is BookingInitial) {
                 return loadingState();
+              } else if (state is BookingListLoaded) {
+                BookingListLoaded stateData = state;
+                return SmartRefresher(
+                  controller: controller.refreshController.value,
+                  enablePullDown: true,
+                  enablePullUp: true,
+                  header: WaterDropMaterialHeader(
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
+                  footer: CustomFooter(
+                    builder: (BuildContext context, LoadStatus mode) {
+                      Widget body;
+                      if (mode == LoadStatus.idle) {
+                        body = Text("pull up load");
+                      } else if (mode == LoadStatus.loading) {
+                        body = CupertinoActivityIndicator();
+                      } else if (mode == LoadStatus.failed) {
+                        body = Text("Load Failed!Click retry!");
+                      } else if (mode == LoadStatus.canLoading) {
+                        body = Text("release to load more");
+                      } else {
+                        body = Text("No more Data");
+                      }
+                      return Container(
+                        height: 55.0,
+                        child: Center(child: body),
+                      );
+                    },
+                  ),
+                  onRefresh: _onRefresh,
+                  onLoading: _onLoading,
+                  child: (stateData.booking.length == 0)
+                      ? emptyState()
+                      : ListView.builder(
+                          padding: EdgeInsets.only(bottom: 0, top: 0),
+                          itemCount: stateData.booking.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            BookingModel booking = stateData.booking[index];
+                            return ListTile(
+                              title: Text(
+                                "${booking.bookingNoOrder}",
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Text(
+                                "${DateTimeUtil.toDateHumanize(booking.bookingTglMasuk.toString())} - ${DateTimeUtil.toDateHumanize(booking.bookingTglKeluar.toString())}",
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              onTap: () {
+                                Get.toNamed("/home/booking/riwayat/detail",
+                                    arguments: booking);
+                              },
+                            );
+                          },
+                        ),
+                );
+              } else {
+                return emptyState();
               }
-              return emptyState();
             }),
           ),
         ],
@@ -219,9 +251,11 @@ class RiwayatAdminBookingTab extends StatelessWidget {
           controller.cari.value = "";
           controller.tglMasuk.value = DateTime.now();
           controller.tglKeluar.value = DateTime.now();
-          controller.title.value = "Hari Ini";
+          controller.title.value = "Semua";
+          controller.semua.value = 1;
           bloc
             ..add(BookingAdminGetListEvent(
+                semua: controller.semua.value,
                 refresh: true,
                 isAdmin: true,
                 status: tabIndex,
@@ -255,9 +289,9 @@ class RiwayatAdminBookingTab extends StatelessWidget {
           controller.cari.value = "";
           controller.tglMasuk.value = DateTime.now();
           controller.tglKeluar.value = DateTime.now();
-          controller.title.value = "Hari Ini";
           bloc
             ..add(BookingAdminGetListEvent(
+                semua: controller.semua.value,
                 refresh: true,
                 isAdmin: true,
                 status: tabIndex,

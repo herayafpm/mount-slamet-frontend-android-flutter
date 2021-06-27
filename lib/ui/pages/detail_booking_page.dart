@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mount_slamet/bloc/booking/booking_bloc.dart';
+import 'package:mount_slamet/controllers/admin_booking_controller.dart';
 import 'package:mount_slamet/controllers/detail_booking_controller.dart';
 import 'package:mount_slamet/controllers/home_controller.dart';
 import 'package:mount_slamet/models/booking_model.dart';
@@ -40,8 +41,31 @@ class DetailBookingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bookingController = Get.put(AdminBookingController());
     controller.noOrder.value = booking.bookingNoOrder;
     bloc = BlocProvider.of<BookingBloc>(context);
+    Icon leading;
+    if (booking.bookingStatusIs("proses")) {
+      leading = Icon(
+        Icons.watch_later_outlined,
+        color: Colors.blueAccent,
+      );
+    } else if (booking.bookingStatusIs("konfirmasi")) {
+      leading = Icon(
+        Icons.check,
+        color: Colors.greenAccent,
+      );
+    } else if (booking.bookingStatusIs("dibatalkan")) {
+      leading = Icon(
+        Icons.highlight_remove_outlined,
+        color: Colors.redAccent,
+      );
+    } else if (booking.bookingStatusIs("selesai")) {
+      leading = Icon(
+        Icons.done_all,
+        color: Colors.greenAccent,
+      );
+    }
     return BlocListener<BookingBloc, BookingState>(
       listener: (context, state) {
         if (state is BookingStateLoading) {
@@ -50,6 +74,9 @@ class DetailBookingView extends StatelessWidget {
           controller.isLoading.value = false;
           if (state is BookingStateSuccess) {
             ToastUtil.success(message: state.data['message'] ?? '');
+            if (bookingController.refreshController.value.position != null) {
+              bookingController.refreshController.value.requestRefresh();
+            }
             Get.back();
           } else if (state is BookingStateError) {
             ToastUtil.error(message: state.errors['message'] ?? '');
@@ -87,6 +114,11 @@ class DetailBookingView extends StatelessWidget {
                       subtitle: Text(DateTimeUtil.toDateHumanize(
                           booking.bookingTglKeluar.toString())),
                     ),
+                    ListTile(
+                        title: Text("Status"),
+                        leading: leading,
+                        subtitle: Text(
+                            booking.bookingStatus.toString().split(".")[1])),
                     Divider(),
                     Txt(
                       "Data Ketua",

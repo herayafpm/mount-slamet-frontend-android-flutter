@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mount_slamet/bloc/booking/booking_bloc.dart';
+import 'package:mount_slamet/controllers/admin_booking_controller.dart';
 import 'package:mount_slamet/models/booking_model.dart';
 import 'package:mount_slamet/utils/date_time_util.dart';
 import 'package:mount_slamet/utils/toast_util.dart';
@@ -23,26 +24,27 @@ class RiwayatBookingPage extends StatelessWidget {
 }
 
 class RiwayatBookingView extends StatelessWidget {
+  final controller = Get.put(AdminBookingController());
   BookingBloc bloc;
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     bloc..add(BookingGetListEvent(refresh: true));
-    _refreshController.refreshCompleted();
+    controller.refreshController.value.refreshCompleted();
   }
 
   void _onLoading() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     bloc..add(BookingGetListEvent());
-    _refreshController.loadComplete();
+    controller.refreshController.value.loadComplete();
   }
 
   @override
   Widget build(BuildContext context) {
+    controller.refreshController.value =
+        RefreshController(initialRefresh: false);
     bloc = BlocProvider.of<BookingBloc>(context);
     return ScreenUtilInit(
         designSize: Size(Constants.screenWidth, Constants.screenHeight),
@@ -63,64 +65,60 @@ class RiwayatBookingView extends StatelessWidget {
               }, builder: (context, state) {
                 if (state is BookingListLoaded) {
                   BookingListLoaded stateData = state;
-                  if (stateData.booking != null &&
-                      stateData.booking.length > 0) {
-                    return SmartRefresher(
-                      controller: _refreshController,
-                      enablePullDown: true,
-                      enablePullUp: true,
-                      header: WaterDropMaterialHeader(
-                        backgroundColor: Theme.of(context).primaryColor,
-                      ),
-                      onRefresh: _onRefresh,
-                      onLoading: _onLoading,
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(bottom: 0, top: 0),
-                        itemCount: stateData.booking.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          BookingModel booking = stateData.booking[index];
-                          Icon leading;
-                          if (booking.bookingStatusIs("proses")) {
-                            leading = Icon(
-                              Icons.watch_later_outlined,
-                              color: Colors.blueAccent,
-                            );
-                          } else if (booking.bookingStatusIs("konfirmasi")) {
-                            leading = Icon(
-                              Icons.check,
-                              color: Colors.greenAccent,
-                            );
-                          } else if (booking.bookingStatusIs("dibatalkan")) {
-                            leading = Icon(
-                              Icons.highlight_remove_outlined,
-                              color: Colors.redAccent,
-                            );
-                          } else if (booking.bookingStatusIs("selesai")) {
-                            leading = Icon(
-                              Icons.done_all,
-                              color: Colors.greenAccent,
-                            );
-                          }
-                          return ListTile(
-                            leading: leading,
-                            title: Text(
-                              "${booking.bookingNoOrder}",
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: Text(
-                              "${DateTimeUtil.toDateHumanize(booking.bookingTglMasuk.toString())} - ${DateTimeUtil.toDateHumanize(booking.bookingTglKeluar.toString())}",
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            onTap: () {
-                              Get.toNamed("/home/booking/riwayat/detail",
-                                  arguments: booking);
-                            },
+                  return SmartRefresher(
+                    controller: controller.refreshController.value,
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    header: WaterDropMaterialHeader(
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
+                    onRefresh: _onRefresh,
+                    onLoading: _onLoading,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: 0, top: 0),
+                      itemCount: stateData.booking.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        BookingModel booking = stateData.booking[index];
+                        Icon leading;
+                        if (booking.bookingStatusIs("proses")) {
+                          leading = Icon(
+                            Icons.watch_later_outlined,
+                            color: Colors.blueAccent,
                           );
-                        },
-                      ),
-                    );
-                  }
-                  return emptyState();
+                        } else if (booking.bookingStatusIs("konfirmasi")) {
+                          leading = Icon(
+                            Icons.check,
+                            color: Colors.greenAccent,
+                          );
+                        } else if (booking.bookingStatusIs("dibatalkan")) {
+                          leading = Icon(
+                            Icons.highlight_remove_outlined,
+                            color: Colors.redAccent,
+                          );
+                        } else if (booking.bookingStatusIs("selesai")) {
+                          leading = Icon(
+                            Icons.done_all,
+                            color: Colors.greenAccent,
+                          );
+                        }
+                        return ListTile(
+                          leading: leading,
+                          title: Text(
+                            "${booking.bookingNoOrder}",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            "${DateTimeUtil.toDateHumanize(booking.bookingTglMasuk.toString())} - ${DateTimeUtil.toDateHumanize(booking.bookingTglKeluar.toString())}",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          onTap: () {
+                            Get.toNamed("/home/booking/riwayat/detail",
+                                arguments: booking);
+                          },
+                        );
+                      },
+                    ),
+                  );
                 } else if (state is BookingStateLoading ||
                     state is BookingInitial) {
                   return loadingState();

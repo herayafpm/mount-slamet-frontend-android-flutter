@@ -57,6 +57,7 @@ class BookingAdminGetListEvent extends BookingEvent {
   final String bookingTglMasuk;
   final String bookingTglKeluar;
   final String cari;
+  final int semua;
 
   BookingAdminGetListEvent(
       {this.refresh = false,
@@ -64,5 +65,6 @@ class BookingAdminGetListEvent extends BookingEvent {
       this.status = 0,
       this.bookingTglMasuk,
       this.bookingTglKeluar,
+      this.semua = 1,
       this.cari});
 }

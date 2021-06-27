@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:mount_slamet/controllers/admin_booking_controller.dart';
 import 'ui/pages/admin/riwayat_admin_booking_page.dart';
 import 'ui/pages/akun/akun_page.dart';
 import 'ui/pages/detail_booking_page.dart';
@@ -128,7 +129,8 @@ class App extends StatelessWidget {
                       page: () => DetailBookingPage()),
                   GetPage(
                       name: "/home/admin/booking/riwayat",
-                      page: () => RiwayatAdminBookingPage()),
+                      page: () => RiwayatAdminBookingPage(),
+                      binding: AdminBookingBind()),
                 ]));
   }
 }
@@ -137,6 +139,13 @@ class HomeBind extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<HomeController>(() => HomeController());
+  }
+}
+
+class AdminBookingBind extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<AdminBookingController>(() => AdminBookingController());
   }
 }
 

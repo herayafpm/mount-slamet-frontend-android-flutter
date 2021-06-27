@@ -14,11 +14,12 @@ abstract class BookingAdminRepository {
       int bookingStatus,
       String bookingTglMasuk,
       String bookingTglKeluar,
-      String cari}) async {
+      String cari,
+      int semua = 1}) async {
     try {
       Dio dio = await DioService.withAuth();
       Response response = await dio.get(
-          "admin/booking?limit=$limit&offset=$offset&booking_status=$bookingStatus&booking_tgl_masuk=$bookingTglMasuk&booking_tgl_keluar=$bookingTglKeluar&cari=$cari");
+          "admin/booking?limit=$limit&offset=$offset&booking_status=$bookingStatus&booking_tgl_masuk=$bookingTglMasuk&booking_tgl_keluar=$bookingTglKeluar&semua=$semua&cari=$cari");
       Map<String, dynamic> data = Map<String, dynamic>();
       data['statusCode'] = response.statusCode;
       data['data'] = response.data;

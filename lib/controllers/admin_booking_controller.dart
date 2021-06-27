@@ -15,9 +15,10 @@ class AdminBookingController extends GetxController {
   final tglKeluar =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
           .obs;
-  final title = "Hari Ini".obs;
+  final title = "Semua".obs;
   final bookingBloc = BookingBloc().obs;
   final cari = "".obs;
+  final semua = 1.obs;
   final refreshController = RefreshController().obs;
 
   void updateDataDate(value) {
@@ -26,62 +27,37 @@ class AdminBookingController extends GetxController {
     title.value = value;
     tglMasuk.value = now;
     tglKeluar.value = now;
+    semua.value = 0;
     String title_esc = title.value.toLowerCase().replaceAll(" ", "_");
-    switch (title_esc) {
-      case "hari_ini":
-        tglMasuk.value = now;
-        tglKeluar.value = now;
-        if (refreshController.value.position != null) {
-          refreshController.value.requestRefresh();
-        }
-        bookingBloc.value
-          ..add(BookingAdminGetListEvent(
-              refresh: true,
-              isAdmin: true,
-              status: tab.value,
-              bookingTglMasuk: DateTimeUtil.onlyDate(tglMasuk.value),
-              bookingTglKeluar: DateTimeUtil.onlyDate(tglKeluar.value),
-              cari: cari.value));
-        break;
-      case "bulan_ini":
-        tglMasuk.value = DateTime(DateTime.now().year, DateTime.now().month, 1);
-        tglKeluar.value = DateTime(
-            DateTime.now().year,
-            DateTime.now().month,
-            DateTime(now.year, now.month - 1, 1)
-                .subtract(Duration(days: 1))
-                .day);
-        if (refreshController.value.position != null) {
-          refreshController.value.requestRefresh();
-        }
-        bookingBloc.value
-          ..add(BookingAdminGetListEvent(
-              refresh: true,
-              isAdmin: true,
-              status: tab.value,
-              bookingTglMasuk: DateTimeUtil.onlyDate(tglMasuk.value),
-              bookingTglKeluar: DateTimeUtil.onlyDate(tglKeluar.value),
-              cari: cari.value));
-        break;
-      case "tahun_ini":
-        tglMasuk.value = DateTime(DateTime.now().year);
-        tglKeluar.value = DateTime(DateTime.now().year, 12,
-            DateTime(now.year + 1, 1, 1).subtract(Duration(days: 1)).day);
-        if (refreshController.value.position != null) {
-          refreshController.value.requestRefresh();
-        }
-        bookingBloc.value
-          ..add(BookingAdminGetListEvent(
-              refresh: true,
-              isAdmin: true,
-              status: tab.value,
-              bookingTglMasuk: DateTimeUtil.onlyDate(tglMasuk.value),
-              bookingTglKeluar: DateTimeUtil.onlyDate(tglKeluar.value),
-              cari: cari.value));
-        break;
-      case "custom":
-        customCalendar();
-        break;
+    if (title_esc == 'hari_ini') {
+      tglMasuk.value = now;
+      tglKeluar.value = now;
+    } else if (title_esc == 'bulan_ini') {
+      tglMasuk.value = DateTime(DateTime.now().year, DateTime.now().month, 1);
+      tglKeluar.value = DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime(now.year, now.month - 1, 1).subtract(Duration(days: 1)).day);
+    } else if (title_esc == 'tahun_ini') {
+      tglMasuk.value = DateTime(DateTime.now().year);
+      tglKeluar.value = DateTime(DateTime.now().year, 12,
+          DateTime(now.year + 1, 1, 1).subtract(Duration(days: 1)).day);
+    } else if (title_esc == 'custom') {
+      customCalendar();
+    } else {
+      semua.value = 1;
+    }
+    if (title_esc != 'custom') {
+      if (refreshController.value.position != null) {
+        refreshController.value.requestRefresh();
+      }
+      bookingBloc.value
+        ..add(BookingAdminGetListEvent(
+            semua: semua.value,
+            refresh: true,
+            isAdmin: true,
+            status: tab.value,
+            bookingTglMasuk: DateTimeUtil.onlyDate(tglMasuk.value),
+            bookingTglKeluar: DateTimeUtil.onlyDate(tglKeluar.value),
+            cari: cari.value));
     }
   }
 
@@ -105,6 +81,7 @@ class AdminBookingController extends GetxController {
                     }
                     bookingBloc.value
                       ..add(BookingAdminGetListEvent(
+                          semua: semua.value,
                           refresh: true,
                           isAdmin: true,
                           status: tab.value,
@@ -261,6 +238,17 @@ class AdminBookingController extends GetxController {
                     if (refreshController.value.position != null) {
                       refreshController.value.requestRefresh();
                     }
+                    bookingBloc.value
+                      ..add(BookingAdminGetListEvent(
+                          semua: semua.value,
+                          refresh: true,
+                          isAdmin: true,
+                          status: tab.value,
+                          bookingTglMasuk:
+                              DateTimeUtil.onlyDate(tglMasuk.value),
+                          bookingTglKeluar:
+                              DateTimeUtil.onlyDate(tglKeluar.value),
+                          cari: cari.value));
                   },
                 )
               ],

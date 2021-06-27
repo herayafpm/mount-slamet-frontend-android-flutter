@@ -25,6 +25,16 @@ class AuthTemplate extends StatelessWidget {
               alignment: Alignment.center,
               child: Column(
                 children: [
+                  Hero(
+                    tag: "icon",
+                    child: Image.asset(
+                      "assets/images/logo.png",
+                      width: 1.sh / 5,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   (onBack != null)
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

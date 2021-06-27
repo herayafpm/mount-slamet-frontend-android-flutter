@@ -52,6 +52,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         yield BookingStateError(res['data']);
       }
     } else if (event is BookingGetListEvent) {
+      yield BookingStateLoading();
       List<BookingModel> booking = [];
       if (state is BookingInitial || event.refresh) {
         Map<String, dynamic> res =
@@ -98,6 +99,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
             bookingStatus: event.status,
             bookingTglMasuk: event.bookingTglMasuk,
             bookingTglKeluar: event.bookingTglKeluar,
+            semua: event.semua,
             cari: event.cari);
         if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
@@ -118,6 +120,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
             bookingStatus: event.status,
             bookingTglMasuk: event.bookingTglMasuk,
             bookingTglKeluar: event.bookingTglKeluar,
+            semua: event.semua,
             cari: event.cari);
         if (res['statusCode'] == 200 && res['data']['status'] == true) {
           var jsonObject = res['data']['data'] as List;
