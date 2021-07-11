@@ -153,6 +153,13 @@ class HomeView extends StatelessWidget {
                             Get.toNamed("/home/akun");
                           }),
                       controller.tileDefault(
+                          title: "Informasi",
+                          icon: Icon(Icons.article),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Get.toNamed("/home/informasi");
+                          }),
+                      controller.tileDefault(
                           title: "About",
                           icon: Icon(Icons.info),
                           onTap: () {

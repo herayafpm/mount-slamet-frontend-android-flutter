@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:mount_slamet/controllers/admin_booking_controller.dart';
+import 'package:mount_slamet/ui/pages/informasi_page.dart';
 import 'ui/pages/admin/riwayat_admin_booking_page.dart';
 import 'ui/pages/akun/akun_page.dart';
 import 'ui/pages/detail_booking_page.dart';
@@ -111,6 +112,7 @@ class App extends StatelessWidget {
                       page: () => HomePage(),
                       binding: HomeBind()),
                   GetPage(name: "/home/akun", page: () => AkunPage()),
+                  GetPage(name: "/home/informasi", page: () => InformasiPage()),
                   GetPage(
                       name: "/home/akun/ubah_profile",
                       page: () => UbahProfilePage(),

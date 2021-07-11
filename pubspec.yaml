@@ -27,8 +27,9 @@ dependencies:
   dio: ^4.0.0
   division: ^0.8.8
   flutter_bloc: ^7.0.1
+  flutter_html: ^2.1.0
   flutter_screenutil: ^5.0.0+2
-  flutter_search_bar: ^2.1.0
+  flutter_search_bar: ^2.0.0
   fluttertoast: ^8.0.7
   font_awesome_flutter: ^9.1.0
   get: ^4.1.4
@@ -42,6 +43,7 @@ dependencies:
   permission_handler: ^8.1.0
   pull_to_refresh: ^2.0.0
   syncfusion_flutter_datepicker: ^19.1.67-beta
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   flutter_test:
